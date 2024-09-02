@@ -71,17 +71,22 @@ function renderLocs(locs) {
 }
 
 function onRemoveLoc(locId) {
-  locService
-    .remove(locId)
-    .then(() => {
-      flashMsg('Location removed')
-      unDisplayLoc()
-      loadAndRenderLocs()
-    })
-    .catch((err) => {
-      console.error('OOPs:', err)
-      flashMsg('Cannot remove location')
-    })
+  const confirmRemove = confirm('Are you sure?')
+  if (confirmRemove) {
+    locService
+      .remove(locId)
+      .then(() => {
+        flashMsg('Location removed')
+        unDisplayLoc()
+        loadAndRenderLocs()
+      })
+      .catch((err) => {
+        console.error('OOPs:', err)
+        flashMsg('Cannot remove location')
+      })
+  } else {
+    flashMsg('Remove canceled')
+  }
 }
 
 function onSearchAddress(ev) {
