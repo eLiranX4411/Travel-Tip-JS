@@ -1,47 +1,55 @@
 body {
-    background-color: var(--bg1);
-    color: #eee;
-    overflow-x: hidden;
+  background-color: var(--bg1);
+  color: #eee;
+  overflow-x: hidden;
+
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
 }
 
 header {
-    background-color: var(--bg2);
-    color: aliceblue;
-    padding: 0.3em;
+  background-color: var(--bg2);
+  color: aliceblue;
+  padding: 0.3em;
 }
 
 header h1 {
-    margin: 0;
+  margin: 0;
+  letter-spacing: 0.4rem;
+  text-shadow: 2px 8px var(--bg3);
 }
 
-input[type=text],input[type=number] {
-    line-height: 2em;
-    background-color: var(--color1);
-    border: 0;
+input[type='text'],
+input[type='number'] {
+  line-height: 2em;
+  background-color: var(--color1);
+  border: 0;
 }
 
 button {
-    color: whitesmoke;
-    border: 0;
-    border-radius: .2em;
-    background-color: #222;
-    padding: 6px 10px;
-    margin: 2px;
-    cursor: pointer;
-    transition: background-color .5s;
+  color: whitesmoke;
+  border: 0;
+  border-radius: 0.5em;
+  background-color: #222;
+  padding: 6px 10px;
+  margin: 2px;
+
+  font-size: 1.2rem;
+
+  cursor: pointer;
+  transition: background-color 0.5s;
 }
 
 button:hover {
-    color: var(--color2);
-    background-color: #111;
+  background-color: var(--color2);
 }
 
 .muted {
-    font-size: .9em;
-    color: var(--gray1);
+  font-size: 0.9em;
+  color: var(--gray1);
 }
 
 .smaller {
-    font-size: .8em;
+  font-size: 0.8em;
 }
-

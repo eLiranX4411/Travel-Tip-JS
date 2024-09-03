@@ -112,7 +112,7 @@ function getLocCountByUpdateMap() {
         const currentDateStart = new Date(currentDate.setHours(0, 0, 0, 0))
         const updatedDateStart = new Date(updatedDate.setHours(0, 0, 0, 0))
 
-        console.log(loc)
+        // console.log(loc)
         if (!loc.updatedAt || loc.updatedAt === 0) {
           map.never++
         } else if (updatedDateStart.getTime() === currentDateStart.getTime()) {
@@ -132,6 +132,7 @@ function getLocCountByUpdateMap() {
 
 function setSortBy(sortBy = {}) {
   gSortBy = sortBy
+  // console.log(sortBy)
 }
 
 function _createLocs() {

@@ -49,9 +49,11 @@ input[type='range'] {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
-  border: 1px solid #ccc;
+  border: 3px solid var(--bg3);
   border-radius: 5px;
   box-sizing: border-box;
+
+  font-size: 1.3rem;
 }
 
 input[type='range'] {
@@ -68,7 +70,7 @@ input[type='range']::-webkit-slider-thumb {
   appearance: none;
   width: 20px;
   height: 20px;
-  background: #4caf50;
+  background: var(--bg3);
   cursor: pointer;
   border-radius: 50%;
 }
