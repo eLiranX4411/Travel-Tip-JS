@@ -39,40 +39,44 @@ function onInit() {
 }
 
 function renderLocs(locs) {
-  const selectedLocId = getLocIdFromQueryParams()
+  mapService.getUserPosition().then((myLoc) => {
+    const selectedLocId = getLocIdFromQueryParams()
 
-  var strHTML = locs
-    .map((loc) => {
-      const className = loc.id === selectedLocId ? 'active' : ''
-      return `
-        <li class="loc ${className}" data-id="${loc.id}">
-            <h4>  
-                <span>${loc.name}</span>
-                <span title="${loc.rate} stars">${'★'.repeat(loc.rate)}</span>
-            </h4>
-            <p class="muted">
-                Created: ${utilService.elapsedTime(loc.createdAt)}
-                ${loc.createdAt !== loc.updatedAt ? ` | Updated: ${utilService.elapsedTime(loc.updatedAt)}` : ''}
-            </p>
-            <div class="loc-btns">     
-               <button title="Delete" onclick="app.onRemoveLoc('${loc.id}')">🗑️</button>
-               <button title="Edit" onclick="app.onUpdateLoc('${loc.id}')">✏️</button>
-               <button title="Select" onclick="app.onSelectLoc('${loc.id}')">🗺️</button>
-            </div>     
-        </li>`
-    })
-    .join('')
+    var strHTML = locs
+      .map((loc) => {
+        const disFromMyLoc = utilService.getDistance(loc.geo, myLoc, 'K')
+        const className = loc.id === selectedLocId ? 'active' : ''
+        return `
+          <li class="loc ${className}" data-id="${loc.id}">
+              <h4>  
+                  <span>${loc.name}</span>
+                  <span>Distance: ${disFromMyLoc} KM.</span>
+                  <span title="${loc.rate} stars">${'★'.repeat(loc.rate)}</span>
+              </h4>
+              <p class="muted">
+                  Created: ${utilService.elapsedTime(loc.createdAt)}
+                  ${loc.createdAt !== loc.updatedAt ? ` | Updated: ${utilService.elapsedTime(loc.updatedAt)}` : ''}
+              </p>
+              <div class="loc-btns">     
+                 <button title="Delete" onclick="app.onRemoveLoc('${loc.id}')">🗑️</button>
+                 <button title="Edit" onclick="app.onUpdateLoc('${loc.id}')">✏️</button>
+                 <button title="Select" onclick="app.onSelectLoc('${loc.id}')">🗺️</button>
+              </div>     
+          </li>`
+      })
+      .join('')
 
-  const elLocList = document.querySelector('.loc-list')
-  elLocList.innerHTML = strHTML || 'No locs to show'
+    const elLocList = document.querySelector('.loc-list')
+    elLocList.innerHTML = strHTML || 'No locs to show'
 
-  renderLocStats()
+    renderLocStats()
 
-  if (selectedLocId) {
-    const selectedLoc = locs.find((loc) => loc.id === selectedLocId)
-    displayLoc(selectedLoc)
-  }
-  document.querySelector('.debug').innerText = JSON.stringify(locs, null, 2)
+    if (selectedLocId) {
+      const selectedLoc = locs.find((loc) => loc.id === selectedLocId)
+      displayLoc(selectedLoc)
+    }
+    document.querySelector('.debug').innerText = JSON.stringify(locs, null, 2)
+  })
 }
 
 function onRemoveLoc(locId) {
@@ -226,20 +230,25 @@ function onSelectLoc(locId) {
 }
 
 function displayLoc(loc) {
-  document.querySelector('.loc.active')?.classList?.remove('active')
-  document.querySelector(`.loc[data-id="${loc.id}"]`).classList.add('active')
+  mapService.getUserPosition().then((myLoc) => {
+    const disFromMyLoc = utilService.getDistance(loc.geo, myLoc, 'K')
 
-  mapService.panTo(loc.geo)
-  mapService.setMarker(loc)
+    document.querySelector('.loc.active')?.classList?.remove('active')
+    document.querySelector(`.loc[data-id="${loc.id}"]`).classList.add('active')
 
-  const el = document.querySelector('.selected-loc')
-  el.querySelector('.loc-name').innerText = loc.name
-  el.querySelector('.loc-address').innerText = loc.geo.address
-  el.querySelector('.loc-rate').innerHTML = '★'.repeat(loc.rate)
-  el.querySelector('[name=loc-copier]').value = window.location
-  el.classList.add('show')
+    mapService.panTo(loc.geo)
+    mapService.setMarker(loc)
 
-  utilService.updateQueryParams({ locId: loc.id })
+    const el = document.querySelector('.selected-loc')
+    el.querySelector('.loc-name').innerText = loc.name
+    el.querySelector('.loc-dis').innerText = `Distance: ${disFromMyLoc} KM.`
+    el.querySelector('.loc-address').innerText = loc.geo.address
+    el.querySelector('.loc-rate').innerHTML = '★'.repeat(loc.rate)
+    el.querySelector('[name=loc-copier]').value = window.location
+    el.classList.add('show')
+
+    utilService.updateQueryParams({ locId: loc.id })
+  })
 }
 
 function unDisplayLoc() {
