@@ -184,20 +184,25 @@ function onSelectLoc(locId) {
 }
 
 function displayLoc(loc) {
-  document.querySelector('.loc.active')?.classList?.remove('active')
-  document.querySelector(`.loc[data-id="${loc.id}"]`).classList.add('active')
+  mapService.getUserPosition().then((myLoc) => {
+    const disFromMyLoc = utilService.getDistance(loc.geo, myLoc, 'K')
 
-  mapService.panTo(loc.geo)
-  mapService.setMarker(loc)
+    document.querySelector('.loc.active')?.classList?.remove('active')
+    document.querySelector(`.loc[data-id="${loc.id}"]`).classList.add('active')
 
-  const el = document.querySelector('.selected-loc')
-  el.querySelector('.loc-name').innerText = loc.name
-  el.querySelector('.loc-address').innerText = loc.geo.address
-  el.querySelector('.loc-rate').innerHTML = '★'.repeat(loc.rate)
-  el.querySelector('[name=loc-copier]').value = window.location
-  el.classList.add('show')
+    mapService.panTo(loc.geo)
+    mapService.setMarker(loc)
 
-  utilService.updateQueryParams({ locId: loc.id })
+    const el = document.querySelector('.selected-loc')
+    el.querySelector('.loc-name').innerText = loc.name
+    el.querySelector('.loc-dis').innerText = `Distance: ${disFromMyLoc} KM.`
+    el.querySelector('.loc-address').innerText = loc.geo.address
+    el.querySelector('.loc-rate').innerHTML = '★'.repeat(loc.rate)
+    el.querySelector('[name=loc-copier]').value = window.location
+    el.classList.add('show')
+
+    utilService.updateQueryParams({ locId: loc.id })
+  })
 }
 
 function unDisplayLoc() {
