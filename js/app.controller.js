@@ -16,6 +16,11 @@ window.app = {
   onShareLoc,
   onSetSortBy,
   onSetFilterBy,
+  closeModalLocaion,
+  saveLocation,
+  openLocationDialog,
+  onAddLoc,
+  loadAndRenderLocs,
 }
 
 function onInit() {
@@ -106,27 +111,87 @@ function onSearchAddress(ev) {
       flashMsg('Cannot lookup address')
     })
 }
+function openLocationDialog(geo = null, loc = null) {
+  const elDialog = document.querySelector('.loc-dialog')
+  elDialog.style.display = 'block'
 
-function onAddLoc(geo) {
-  const locName = prompt('Loc name', geo.address || 'Just a place')
-  if (!locName) return
+  const isUpdate = loc !== null
+  const title = isUpdate ? 'Update location' : 'Add new location'
+  const nameValue = loc ? loc.name : ''
+  const rateValue = loc ? loc.rate : '3'
+  const latValue = geo ? geo.lat : loc.geo.lat
+  const lngValue = geo ? geo.lng : loc.geo.lng
 
-  const loc = {
-    name: locName,
-    rate: +prompt(`Rate (1-5)`, '3'),
-    geo,
+  elDialog.innerHTML = `
+    <form method="dialog" class="location-form">
+      <h3>${title}</h3>
+      <label for="lat-loc">Latitude</label>
+      <input type="text" id="lat-loc" name="lat" value="${latValue}" readonly required>
+      <label for="lng-loc">Longitude</label>
+      <input type="text" id="lng-loc" name="lng" value="${lngValue}" readonly required>
+      <label for="name-loc">Location Name</label>
+      <input type="text" id="name-loc" name="name" value="${nameValue}" required>
+      <label for="rate-loc">Rate (1-5)</label>
+      <input type="range" id="rate-loc" name="rate" min="1" max="5" value="${rateValue}" required>
+      <div class="dialog-actions">
+        <button type="submit">${isUpdate ? 'Update' : 'Save'} Location</button>
+        <button type="button" onclick="app.closeModalLocaion()">Cancel</button>
+      </div>
+    </form>
+  `
+
+  elDialog.querySelector('.location-form').addEventListener('submit', (event) => {
+    event.preventDefault()
+    if (isUpdate) {
+      saveLocation(loc)
+    } else {
+      saveLocation(null, geo)
+    }
+  })
+}
+
+function saveLocation(loc = null, geo = null) {
+  const elDialog = document.querySelector('.location-form')
+
+  if (!loc) {
+    loc = {
+      name: elDialog.querySelector('#name-loc').value,
+      rate: elDialog.querySelector('#rate-loc').value,
+      geo,
+    }
+  } else {
+    loc.name = elDialog.querySelector('#name-loc').value
+    loc.rate = elDialog.querySelector('#rate-loc').value
   }
+
   locService
     .save(loc)
     .then((savedLoc) => {
-      flashMsg(`Added Location (id: ${savedLoc.id})`)
+      const action = loc.geo ? 'Updated' : 'Added'
+      flashMsg(`${action} Location (id: ${savedLoc.id})`)
       utilService.updateQueryParams({ locId: savedLoc.id })
       loadAndRenderLocs()
+      closeModalLocaion()
     })
     .catch((err) => {
       console.error('OOPs:', err)
-      flashMsg('Cannot add location')
+      flashMsg(`Cannot ${loc.geo ? 'update' : 'add'} location`)
     })
+}
+
+function onAddLoc(geo) {
+  openLocationDialog(geo)
+}
+
+function onUpdateLoc(locId) {
+  locService.getById(locId).then((loc) => {
+    openLocationDialog(null, loc)
+  })
+}
+
+function closeModalLocaion() {
+  const elDialog = document.querySelector('.loc-dialog')
+  elDialog.style.display = 'none'
 }
 
 function loadAndRenderLocs() {
@@ -152,25 +217,6 @@ function onPanToUserPos() {
       console.error('OOPs:', err)
       flashMsg('Cannot get your position')
     })
-}
-
-function onUpdateLoc(locId) {
-  locService.getById(locId).then((loc) => {
-    const rate = prompt('New rate?', loc.rate)
-    if (rate && rate !== loc.rate) {
-      loc.rate = rate
-      locService
-        .save(loc)
-        .then((savedLoc) => {
-          flashMsg(`Rate was set to: ${savedLoc.rate}`)
-          loadAndRenderLocs()
-        })
-        .catch((err) => {
-          console.error('OOPs:', err)
-          flashMsg('Cannot update location')
-        })
-    }
-  })
 }
 
 function onSelectLoc(locId) {
