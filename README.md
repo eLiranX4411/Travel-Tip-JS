@@ -1,91 +1,103 @@
 # TravelTip
-#### The app that gets you somewhere
 
+#### The app that helps you find your favorite places
 
 ## Description
-TravelTip is an app that keeps a list of favorite locations
+
+TravelTip is an application that allows users to manage a list of favorite locations.
 
 ## Main Features
-- The app allows the user to keep and manage locations
-- The user can also search for an address and pan the map to that point
-- The User can pan the map to his own geo-location
 
-## Locations CRUDL 
-- Create – click on the map prompts for name and rate
-- Read – Selected location details (see below) 
-- Update – can update location rate
-- Delete – can delete a location
-- List - Including filtering, sorting and grouping
+- The app enables users to store and manage locations.
+- Users can search for an address and pan the map to the selected point.
+- Users can also pan the map to their current geo-location.
 
-## Selected Location
-- Displayed in the header
-- Location is active in the list (gold color)
-- Marker on the map
-- Reflected in query params 
-- Copy url to clipboard
-- Share via Web-Share API
+## Locations CRUDL (Create, Read, Update, Delete, List)
 
-## Location
-Here is the format of the location object:
+- **Create** – Clicking on the map prompts for a location name and rating.
+- **Read** – Displays the selected location's details.
+- **Update** – Allows the user to update the location's rating.
+- **Delete** – Allows the user to delete a location.
+- **List** – Includes filtering, sorting, and grouping of locations.
+
+## Selected Location Features
+
+- The selected location is displayed in the header.
+- The location is highlighted in the list (gold color).
+- A marker is placed on the map for the selected location.
+- The selected location is reflected in the query parameters.
+- Users can copy the URL to their clipboard.
+- Users can share the location via the Web Share API.
+
+## Location Object Format
+
+The location object has the following format:
+
 ```js
 {
-    id: 'GEouN',
-    name: 'Dahab, Egypt',
-    rate: 5,
-    geo: {
-      address: 'Dahab, South Sinai, Egypt',
-      lat: 28.5096676,
-      lng: 34.5165187,
-      zoom: 11
-    },
-    createdAt: 1706562160181,
-    updatedAt: 1706562160181
-  }
-  ```
+  id: 'GEouN',
+  name: 'Dahab, Egypt',
+  rate: 5,
+  geo: {
+    address: 'Dahab, South Sinai, Egypt',
+    lat: 28.5096676,
+    lng: 34.5165187,
+    zoom: 11
+  },
+  createdAt: 1706562160181,
+  updatedAt: 1706562160181
+}
+```
+
 ## Services
+
+The services used in the application:
+
 ```js
 export const locService = {
-    query,
-    getById,
-    remove,
-    save,
-    setFilterBy,
-    setSortBy,
-    getLocCountByRateMap
+  query,
+  getById,
+  remove,
+  save,
+  setFilterBy,
+  setSortBy,
+  getLocCountByUpdateMap,
 }
 
 export const mapService = {
-    initMap,
-    getPosition,
-    setMarker,
-    panTo,
-    lookupAddressGeo,
-    addClickListener
+  initMap,
+  getUserPosition,
+  setMarker,
+  panTo,
+  lookupAddressGeo,
+  addClickListener,
 }
 ```
 
 ## Controller
-```js
-// To make things easier in this project structure 
-// functions that are called from DOM are defined on a global app object
 
+The global `app` object makes it easy to interact with DOM functions:
+
+```js
 window.app = {
-    onRemoveLoc,
-    onUpdateLoc,
-    onSelectLoc,
-    onPanToUserPos,
-    onSearchAddress,
-    onCopyLoc,
-    onShareLoc,
-    onSetSortBy,
-    onSetFilterBy
+  onRemoveLoc,
+  onUpdateLoc,
+  onSelectLoc,
+  onPanToUserPos,
+  onSearchAddress,
+  onCopyLoc,
+  onShareLoc,
+  onSetSortBy,
+  onSetFilterBy,
 }
 ```
 
-Here is a sample usage:
+## Sample Usage
+
+Here is an example of how to use the app:
+
 ```html
-<button onclick="app.onCopyLoc()">Copy location</button>
-<button onclick="app.onShareLoc()">Share location</button>
+<button onclick="app.onCopyLoc()">Copy location</button> <button onclick="app.onShareLoc()">Share location</button>
 ```
 
-
+This project is based on a starter template from Coding Academy and was enhanced and upgraded by Eliran Zohar & Michael Flaishcer.
