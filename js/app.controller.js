@@ -69,7 +69,9 @@ function renderLocs(locs) {
     const elLocList = document.querySelector('.loc-list')
     elLocList.innerHTML = strHTML || 'No locs to show'
 
-    renderLocStats()
+    // renderLocStats()
+    renderLocStatsByRate()
+    renderLocStatsByUpdate()
 
     if (selectedLocId) {
       const selectedLoc = locs.find((loc) => loc.id === selectedLocId)
@@ -327,15 +329,15 @@ function onSetFilterBy({ txt, minRate }) {
   loadAndRenderLocs()
 }
 
-// function renderLocStats() {
-//   locService.getLocCountByRateMap().then((stats) => {
-//     handleStats(stats, 'loc-stats-rate')
-//   })
-// }
-
-function renderLocStats() {
-  locService.getLocCountByUpdateMap().then((stats) => {
+function renderLocStatsByRate() {
+  locService.getLocCountByRateMap().then((stats) => {
     handleStats(stats, 'loc-stats-rate')
+  })
+}
+
+function renderLocStatsByUpdate() {
+  locService.getLocCountByUpdateMap().then((stats) => {
+    handleStats(stats, 'loc-stats-update')
     // console.log(stats)
   })
 }

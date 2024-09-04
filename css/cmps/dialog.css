@@ -12,7 +12,7 @@
 }
 
 .location-form {
-  background-color: #8a8282;
+  background-color: var(--bg3);
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -28,16 +28,20 @@
 }
 
 .dialog-actions button {
-  background-color: #4caf50;
+  background-color: var(--color2);
   color: black;
-  border: none;
+  border: 3px black solid;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
 }
 
-.dialog-actions button[type='button'] {
-  background-color: #f44336;
+.dialog-actions button:hover {
+  background-color: lightgreen;
+}
+
+.dialog-actions button[type='button']:hover {
+  background-color: red;
 }
 
 .dialog-actions button:hover {
